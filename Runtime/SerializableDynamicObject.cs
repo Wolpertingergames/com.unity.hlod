@@ -78,6 +78,20 @@ namespace Unity.HLODSystem
             return true;
         }
 
+        public bool TrySetMember(string name, object value)
+        {
+            if (!m_DynamicContext.ContainsKey(name))
+            {
+                m_DynamicContext.Add(name, value);
+            }
+            else
+            {
+                m_DynamicContext[name] = value;
+            }
+
+            return true;
+        }
+
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             if (m_DynamicContext.TryGetValue(binder.Name, out result) == false)
