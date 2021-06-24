@@ -21,8 +21,21 @@ namespace Unity.HLODSystem.Simplifier
         }
 
         protected override IEnumerator GetSimplifiedMesh(Utils.WorkingMesh origin, float quality, Action<Utils.WorkingMesh> resultCallback)
-        {
+        { 
             var meshSimplifier = new global::UnityMeshSimplifier.MeshSimplifier();
+            meshSimplifier.SimplificationOptions = new global::UnityMeshSimplifier.SimplificationOptions
+            {
+                PreserveBorderEdges = m_options.PreserveBorderEdges,
+                PreserveUVSeamEdges = m_options.PreserveUVSeamEdges,
+                PreserveUVFoldoverEdges = m_options.PreserveUVFoldoverEdges,
+                PreserveSurfaceCurvature = m_options.PreserveSurfaceCurvature,
+                EnableSmartLink = m_options.EnableSmartLink,
+                VertexLinkDistance = m_options.VertexLinkDistance,
+                MaxIterationCount = m_options.MaxIterationCount,
+                Agressiveness = m_options.Agressiveness,
+                ManualUVComponentCount = m_options.ManualUVComponentCount,
+                UVComponentCount = m_options.UVComponentCount,
+            };
             meshSimplifier.Vertices = origin.vertices;
             meshSimplifier.Normals = origin.normals;
             meshSimplifier.Tangents = origin.tangents;

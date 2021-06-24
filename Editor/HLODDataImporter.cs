@@ -2,18 +2,18 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 using TextureCompressionQuality = UnityEditor.TextureCompressionQuality;
 using UnityEditor.Experimental;
 
 namespace Unity.HLODSystem
 {
-    [ScriptedImporter(version: 1, ext: "hlod", AllowCaching = true)]
-    public class HLODDataImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, ext: "hlod", AllowCaching = true)]
+    public class HLODDataImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             ctx.DependsOnCustomDependency("HLODSystemPlatform");
             
@@ -223,7 +223,7 @@ namespace Unity.HLODSystem
         static void UpdateBuildTaget(BuildTarget target)
         {
             var hash = Hash128.Compute(target.ToString());
-            AssetDatabaseExperimental.RegisterCustomDependency("HLODSystemPlatform", hash);
+            AssetDatabase.RegisterCustomDependency("HLODSystemPlatform", hash);
         }
         public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget)
         {

@@ -10,7 +10,7 @@ namespace Unity.HLODSystem.Simplifier
 {
     public abstract class SimplifierBase : ISimplifier
     {
-        private dynamic m_options;
+        protected dynamic m_options;
         public SimplifierBase(SerializableDynamicObject simplifierOptions)
         {
             m_options = simplifierOptions;
@@ -74,13 +74,47 @@ namespace Unity.HLODSystem.Simplifier
                 options.SimplifyMinPolygonCount = 10;
             if (options.SimplifyMaxPolygonCount == null)
                 options.SimplifyMaxPolygonCount = 500;
-            
+
+
+            if (options.PreserveBorderEdges == null)
+                options.PreserveBorderEdges = false;
+            if (options.PreserveUVSeamEdges == null)
+                options.PreserveUVSeamEdges = false;
+            if (options.PreserveUVFoldoverEdges == null)
+                options.PreserveUVFoldoverEdges = false;
+            if (options.PreserveSurfaceCurvature == null)
+                options.PreserveSurfaceCurvature = false;
+            if (options.EnableSmartLink == null)
+                options.EnableSmartLink = true;
+            if (options.VertexLinkDistance == null)
+                options.VertexLinkDistance = 4.94065645841247e-324;
+            if (options.MaxIterationCount == null)
+                options.MaxIterationCount = 1;
+            if (options.Agressiveness == null)
+                options.Agressiveness = 7;
+            if (options.ManualUVComponentCount == null)
+                options.ManualUVComponentCount = false;
+            if (options.UVComponentCount == null)
+                options.UVComponentCount = 2;
+
 
             options.SimplifyPolygonRatio = EditorGUILayout.Slider("Polygon Ratio", options.SimplifyPolygonRatio, 0.0f, 1.0f);
             EditorGUILayout.LabelField("Triangle Range");
             EditorGUI.indentLevel += 1;
             options.SimplifyMinPolygonCount = EditorGUILayout.IntSlider("Min", options.SimplifyMinPolygonCount, 10, 100);
             options.SimplifyMaxPolygonCount = EditorGUILayout.IntSlider("Max", options.SimplifyMaxPolygonCount, 10, 5000);
+
+            options.PreserveBorderEdges = EditorGUILayout.Toggle("Preserve Border Edges", options.PreserveBorderEdges);
+            options.PreserveUVSeamEdges = EditorGUILayout.Toggle("Preserve UV Seam Edges", options.PreserveUVSeamEdges);
+            options.PreserveUVFoldoverEdges = EditorGUILayout.Toggle("Preserve UV Foldove rEdges", options.PreserveUVFoldoverEdges);
+            options.PreserveSurfaceCurvature = EditorGUILayout.Toggle("Preserve Surface Curvature", options.PreserveSurfaceCurvature);
+            options.EnableSmartLink = EditorGUILayout.Toggle("Enable Smart Link", options.EnableSmartLink);
+            options.VertexLinkDistance = EditorGUILayout.DoubleField("Vertex Link Distance", options.VertexLinkDistance);
+            options.MaxIterationCount = EditorGUILayout.IntField("Max Iteration Count", options.MaxIterationCount);
+            options.Agressiveness = EditorGUILayout.FloatField("Agressiveness", options.Agressiveness);
+            options.ManualUVComponentCount = EditorGUILayout.Toggle("Manual UV Component Count", options.ManualUVComponentCount);
+            options.UVComponentCount = EditorGUILayout.IntField("UV Component Count", options.UVComponentCount);
+
             EditorGUI.indentLevel -= 1;
 
             EditorGUI.indentLevel -= 1;
