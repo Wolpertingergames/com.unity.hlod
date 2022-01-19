@@ -34,6 +34,10 @@ namespace Unity.HLODSystem
             public string InputName = "_InputProperty";
             public string OutputName = "_OutputProperty";
             public PackingType Type = PackingType.White;
+
+            public float MipMapBias = 0f;
+            public int AnisoLevel = 1;
+            public FilterMode FilterMode = FilterMode.Bilinear;
         }
 
         public SimpleBatcher(SerializableDynamicObject batcherOptions)
@@ -232,11 +236,17 @@ namespace Unity.HLODSystem
                 for (int i = 0; i < atlas.Textures.Count; ++i)
                 {
                     WorkingTexture wt = atlas.Textures[i];
+                    var ti = textureInfoList[i];
                     wt.Name = "CombinedTexture " + index + "_" + i;
-                    if (textureInfoList[i].Type == PackingType.Normal)
+                    if (ti.Type == PackingType.Normal)
                     {
                         wt.Linear = true;
                     }
+                    wt.MipMapBias = ti.MipMapBias;
+                    wt.AnisoLevel = ti.AnisoLevel;
+                    wt.FilterMode = ti.FilterMode;
+
+                    wt.ApplyImportSettings();
 
                     textures.Add(textureInfoList[i].OutputName, wt);
                 }
@@ -435,7 +445,10 @@ namespace Unity.HLODSystem
                 {
                     InputName = "_MainTex",
                     OutputName = "_MainTex",
-                    Type = PackingType.White
+                    Type = PackingType.White,
+                    MipMapBias = 0f,
+                    AnisoLevel = 1,
+                    FilterMode = FilterMode.Bilinear,
                 });
             }
 
@@ -521,17 +534,24 @@ namespace Unity.HLODSystem
             EditorGUILayout.SelectableLabel("Input");
             EditorGUILayout.SelectableLabel("Output");
             EditorGUILayout.SelectableLabel("Type");
+            EditorGUILayout.SelectableLabel("MipMapBias");
+            EditorGUILayout.SelectableLabel("AnisoLevel");
+            EditorGUILayout.SelectableLabel("FilterMode");
             EditorGUILayout.EndHorizontal();
 
             for (int i = 0; i < batcherOptions.TextureInfoList.Count; ++i)
             {
                 TextureInfo info = batcherOptions.TextureInfoList[i];
+                GUILayout.FlexibleSpace();
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PrefixLabel(" ");
 
                 info.InputName = StringPopup(info.InputName, inputTexturePropertyNames);
                 info.OutputName = StringPopup(info.OutputName, outputTexturePropertyNames);
                 info.Type = (PackingType)EditorGUILayout.EnumPopup(info.Type);
+                info.MipMapBias = EditorGUILayout.FloatField(info.MipMapBias);
+                info.AnisoLevel = EditorGUILayout.IntPopup(info.AnisoLevel, new string[] { "-3", "-2", "-1", "0", "1", "2", "3" }, new int[] { -3, -2, -1, 0, 1, 2, 3 });
+                info.FilterMode = (FilterMode)EditorGUILayout.EnumPopup(info.FilterMode);
 
                 if (i == 0)
                     GUI.enabled = false;

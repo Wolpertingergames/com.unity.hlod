@@ -154,6 +154,11 @@ namespace Unity.HLODSystem
             [SerializeField] private int m_height;
             [SerializeField] private byte[] m_bytes;
 
+
+            [SerializeField] private float m_mipMapBias;
+            [SerializeField] private int m_anisoLevel;
+            [SerializeField] private FilterMode m_filterMode;
+
             public string Name
             {
                 set { m_name = value; }
@@ -193,6 +198,18 @@ namespace Unity.HLODSystem
                     return m_bytes.Length; 
                 }
             }
+            public float MipMapBias
+            {
+                get => m_mipMapBias;
+            }
+            public int AnisoLevel
+            {
+                get => m_anisoLevel;
+            }
+            public FilterMode FilterMode
+            {
+                get => m_filterMode;
+            }
 
             public void From(Texture2D texture)
             {
@@ -202,6 +219,9 @@ namespace Unity.HLODSystem
                 m_width = texture.width;
                 m_height = texture.height;                
                 m_bytes = texture.EncodeToPNG();
+                m_mipMapBias = texture.mipMapBias;
+                m_anisoLevel = texture.anisoLevel;
+                m_filterMode = texture.filterMode;
             }
 
             public Texture2D To()
@@ -212,6 +232,9 @@ namespace Unity.HLODSystem
                 texture.name = m_textureName;
                 texture.LoadImage(m_bytes);
                 texture.wrapMode = m_wrapMode;
+                texture.mipMapBias = m_mipMapBias;
+                texture.anisoLevel = m_anisoLevel;
+                texture.filterMode = m_filterMode;
                 texture.Apply();
                 return texture;
             }
