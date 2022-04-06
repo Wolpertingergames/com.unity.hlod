@@ -76,6 +76,21 @@ namespace Unity.HLODSystem
                 m_activeControllers[i].UpdateCull(cam);
             }
         }
-    }
 
+        public bool IsLoadDone()
+        {
+            if (m_activeControllers == null ||
+                m_activeControllers.Count <= 0)
+                return true;
+
+            for (int i = 0; i < m_activeControllers.Count; ++i)
+            {
+                if(!m_activeControllers[i].IsLoadDone())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }
