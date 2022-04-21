@@ -6,6 +6,89 @@ using UnityEngine;
 
 namespace Unity.HLODSystem
 {
+    public interface IHLODTreeNodeFSMStateChange
+    {
+        void Entering(HLODTreeNode.State state);
+        bool IsReadyToEnter(HLODTreeNode.State state);
+        void Entered(HLODTreeNode.State state);
+
+        //void Exiting(HLODTreeNode.State state);
+        //bool IsReadyToExit(HLODTreeNode.State state);
+        void Exited(HLODTreeNode.State state);
+    }
+
+    public class HLODTreeNodeFSM
+    {
+        private HLODTreeNode.State m_currentState = default;
+        private HLODTreeNode.State m_lastState = default;
+        private HLODTreeNode.State m_transactionTargetState = default;
+
+        public HLODTreeNode.State CurrentState => m_currentState;
+        public HLODTreeNode.State LastState => m_lastState;
+
+        //IHLODTreeNodeFSMStateChange Callback;
+        HLODTreeNode Callback;
+
+        public void Update()
+        {
+            //transaction still progressing. have to check to finish.
+            if (Compare(m_currentState, m_transactionTargetState) == false)
+            {
+                /*if (Callback.IsReadyToExit(m_currentState) == false)
+                    return;*/
+                if (Callback.IsReadyToEnter(m_transactionTargetState) == false)
+                    return;
+
+                //the transaction has been finished.
+                Callback.Exited(m_currentState);
+                Callback.Entered(m_transactionTargetState);
+
+                m_currentState = m_transactionTargetState;
+            }
+
+            Debug.Assert(Compare(m_currentState, m_transactionTargetState));
+
+            //Here the transaction is always complete.
+            //We have to check to start a new transaction.
+            if (Compare(m_currentState, m_lastState) == false)
+            {
+                StartTransaction(m_currentState, m_lastState);
+            }
+        }
+
+        public void ChangeState(HLODTreeNode.State state)
+        {
+            m_lastState = state;
+            if (Compare(m_currentState, m_lastState))
+                return;
+
+            //it means, completed the last transaction. we should do it immediately. 
+            if (Compare(m_currentState, m_transactionTargetState))
+            {
+                StartTransaction(m_currentState, m_lastState);
+            }
+        }
+
+        //public void RegisterCallback(IHLODTreeNodeFSMStateChange callback)
+        public void RegisterCallback(HLODTreeNode callback)
+        {
+            this.Callback = callback;
+        }
+
+        private void StartTransaction(HLODTreeNode.State current, HLODTreeNode.State target)
+        {
+            m_transactionTargetState = target;
+
+            //Callback.Exiting(current);
+            Callback.Entering(target);
+        }
+
+        private static bool Compare(HLODTreeNode.State lhs, HLODTreeNode.State rhs)
+        {
+            return lhs == rhs;
+        }
+
+    }
     public class FSM<T> where T : struct
     {
         private T m_currentState = default;
