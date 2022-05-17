@@ -53,8 +53,8 @@ namespace Unity.HLODSystem
             if (cam == null)
                 return;
 
-#if UNITY_EDITOR
             Transform camTrans = null;
+#if UNITY_EDITOR
 
             if (EditorApplication.isPlaying == false)
             {
@@ -73,6 +73,8 @@ namespace Unity.HLODSystem
 #else
             if (cam != HLODCameraRecognizer.RecognizedCamera)
                 return;
+            else
+                camTrans = HLODCameraRecognizer.RecognizedCameraTrans;
 #endif
 
             if (m_activeControllers == null)
