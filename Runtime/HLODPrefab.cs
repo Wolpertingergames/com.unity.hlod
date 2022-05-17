@@ -91,6 +91,8 @@ namespace Unity.HLODSystem
             if (m_instantiatePrefab == null)
                 return;
 
+            var instantiatePrefabTrans = m_instantiatePrefab.GetComponent<Transform>();
+
             if (m_isEdit == true)
             {
                 m_instantiatePrefab.hideFlags = HideFlags.DontSave;
@@ -102,17 +104,10 @@ namespace Unity.HLODSystem
 
                 int layer = LayerMask.NameToLayer(HLOD.HLODLayerStr);
                 if ( layer >= 0 && layer <= 31)
-                    ChangeLayersRecursively(m_instantiatePrefab.transform, layer);
-
-                foreach (var hlod in FindHLODinPrefab(m_instantiatePrefab))
-                {
-//                    HLODManager.Instance.RegisterHLOD(hlod);
-//                    hlod.StartUseInEditor();
-                }
+                    ChangeLayersRecursively(instantiatePrefabTrans, layer);
             }
-          
 
-            m_instantiatePrefab.transform.SetParent(transform, false);
+            instantiatePrefabTrans.SetParent(transform, false);
         }
 
         void DestroyPrefab()
@@ -120,11 +115,6 @@ namespace Unity.HLODSystem
             if (m_instantiatePrefab == null)
                 return;
 
-            foreach (var hlod in FindHLODinPrefab(m_instantiatePrefab))
-            {
-                //HLODManager.Instance.UnregisterHLOD(hlod);
-                //hlod.StopUseInEditor();
-            }
             m_instantiatePrefab.SetActive(false);
             DestroyImmediate(m_instantiatePrefab);
 
@@ -132,7 +122,6 @@ namespace Unity.HLODSystem
 
         static HLOD[] FindHLODinPrefab(GameObject prefab)
         {
-            List<HLOD> prefabHlods  = new List<HLOD>();
             return prefab.GetComponentsInChildren<HLOD>();
         }
 

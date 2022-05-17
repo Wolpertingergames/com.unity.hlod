@@ -7,13 +7,16 @@ namespace Unity.HLODSystem
     {
         private static HLODCameraRecognizer s_instance;
         private static Camera s_recognizedCamera;
+        private static Transform s_recognizedCameraTrans;
         public static HLODCameraRecognizer Instance => s_instance;
         public static Camera RecognizedCamera => s_recognizedCamera;
+        public static Transform RecognizedCameraTrans => s_recognizedCameraTrans;
 
         private void Awake()
         {
             s_instance = this;
             s_recognizedCamera = GetComponent<Camera>();
+            s_recognizedCameraTrans = GetComponent<Transform>();
         }
 
         private void OnDestroy()
@@ -22,6 +25,7 @@ namespace Unity.HLODSystem
             {
                 s_instance = null;
                 s_recognizedCamera = null;
+                s_recognizedCameraTrans = null;
             }
         }
     }

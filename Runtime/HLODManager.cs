@@ -50,7 +50,12 @@ namespace Unity.HLODSystem
 
         public void OnPreCull(Camera cam)
         {
+            if (cam == null)
+                return;
+
 #if UNITY_EDITOR
+            Transform camTrans = null;
+
             if (EditorApplication.isPlaying == false)
             {
                 if (SceneView.currentDrawingSceneView == null)
@@ -62,6 +67,8 @@ namespace Unity.HLODSystem
             {
                 if (cam != HLODCameraRecognizer.RecognizedCamera)
                     return;
+                else
+                    camTrans = HLODCameraRecognizer.RecognizedCameraTrans;
             }
 #else
             if (cam != HLODCameraRecognizer.RecognizedCamera)
@@ -71,9 +78,12 @@ namespace Unity.HLODSystem
             if (m_activeControllers == null)
                 return;
 
+            if (camTrans == null)
+                camTrans = cam.GetComponent<Transform>();
+
             for (int i = 0; i < m_activeControllers.Count; ++i)
             {
-                m_activeControllers[i].UpdateCull(cam);
+                m_activeControllers[i].UpdateCull(cam, camTrans);
             }
         }
 

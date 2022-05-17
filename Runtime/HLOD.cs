@@ -118,10 +118,10 @@ namespace Unity.HLODSystem
         }
 #endif
 
-        Bounds CalcLocalBounds(Renderer renderer)
+        Bounds CalcLocalBounds(Renderer renderer, Vector3 localPos)
         {
             Bounds bounds = renderer.bounds;
-            bounds.center -= transform.position;
+            bounds.center -= localPos;
 
             return bounds;
         }
@@ -136,10 +136,12 @@ namespace Unity.HLODSystem
                 return ret;
             }
 
-            Bounds bounds = CalcLocalBounds(renderers[0]);
+            var localPos = GetComponent<Transform>().position;
+
+            Bounds bounds = CalcLocalBounds(renderers[0], localPos);
             for (int i = 1; i < renderers.Length; ++i)
             {
-                bounds.Encapsulate(CalcLocalBounds(renderers[i]));
+                bounds.Encapsulate(CalcLocalBounds(renderers[i], localPos));
             }
 
             ret.center = bounds.center;

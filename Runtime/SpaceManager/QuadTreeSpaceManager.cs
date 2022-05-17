@@ -12,7 +12,7 @@ namespace Unity.HLODSystem.SpaceManager
         public QuadTreeSpaceManager()
         {
         }
-        public void UpdateCamera(Transform hlodTransform, Camera cam)
+        public void UpdateCamera(Transform hlodTransform, Camera cam, Transform camTransfrom)
         {
             if (cam.orthographic)
             {
@@ -24,7 +24,7 @@ namespace Unity.HLODSystem.SpaceManager
                 preRelative = 0.5f / halfAngle;
             }
             preRelative = preRelative * QualitySettings.lodBias;
-            camPosition = hlodTransform.worldToLocalMatrix.MultiplyPoint(cam.transform.position);
+            camPosition = hlodTransform.worldToLocalMatrix.MultiplyPoint(camTransfrom.position);
         }
 
         public bool IsHigh(float lodDistance, Bounds bounds)

@@ -28,9 +28,12 @@ namespace Unity.HLODSystem.Streaming
         public abstract void ReleaseLowObject(ControllerID id);
         #endregion
 
+        Transform trans;
+
         #region Unity Events
         public void Awake()
         {
+            trans = GetComponent<Transform>();
             m_spaceManager = new QuadTreeSpaceManager();
         }
 
@@ -67,12 +70,12 @@ namespace Unity.HLODSystem.Streaming
         #endregion
 
         #region Method
-        public void UpdateCull(Camera camera)
+        public void UpdateCull(Camera camera, Transform camTransfrom)
         {
             if (m_spaceManager == null)
                 return;
 
-            m_spaceManager.UpdateCamera(this.transform, camera);
+            m_spaceManager.UpdateCamera(trans, camera, camTransfrom);
 
             m_root.Cull(m_spaceManager.IsCull(m_cullDistance, m_root.Bounds));
             m_root.Update(m_lodDistance);
